@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Product</title>
+
+<title>Product Details</title>
 
 <style>
 
@@ -18,119 +20,67 @@ background:#f1f3f6;
 .header{
 background:#2874f0;
 color:white;
-padding:10px;
+padding:12px;
 display:flex;
 align-items:center;
 justify-content:space-between;
 }
 
-.header .left{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.icon{
+.back{
 font-size:20px;
 cursor:pointer;
 }
 
-/* IMAGE SLIDER */
-
-.slider{
-background:#eee;
-position:relative;
+.cart{
+font-size:20px;
 }
 
-.slider img{
+/* IMAGE */
+
+.image{
+background:white;
+}
+
+.image img{
 width:100%;
 }
 
-.float-icons{
-position:absolute;
-right:10px;
-top:20px;
-display:flex;
-flex-direction:column;
-gap:10px;
+/* INFO */
+
+.info{
+background:white;
+margin-top:10px;
+padding:15px;
 }
 
-.float-icons div{
-background:white;
-width:40px;
-height:40px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
+.name{
 font-size:18px;
+margin-bottom:8px;
 }
 
-/* DOTS */
-
-.dots{
-text-align:center;
-padding:8px;
-}
-
-.dot{
-height:8px;
-width:8px;
-background:#ccc;
-display:inline-block;
-border-radius:50%;
-margin:3px;
-}
-
-/* PRODUCT BOX */
-
-.box{
-background:white;
-padding:12px;
-margin-top:6px;
-}
-
-.title{
-font-size:15px;
-}
-
-.price-row{
-margin-top:8px;
-}
-
-.off{
-color:green;
+.price{
+font-size:22px;
 font-weight:bold;
 }
 
 .mrp{
 text-decoration:line-through;
 color:gray;
-margin:0 5px;
+margin-left:6px;
 }
 
-.price{
+.discount{
+color:green;
+margin-left:6px;
 font-weight:bold;
-font-size:18px;
 }
 
-/* OFFER */
-
-.offer{
-background:white;
-margin-top:6px;
-padding:12px;
-font-size:16px;
+.delivery{
+margin-top:10px;
+color:#555;
 }
 
-/* EXTRA IMAGES */
-
-.extra img{
-width:100%;
-margin-top:6px;
-}
-
-/* BOTTOM BAR */
+/* BUTTONS */
 
 .bottom{
 position:fixed;
@@ -140,194 +90,155 @@ right:0;
 display:flex;
 }
 
-.cart{
+.btn{
 flex:1;
-background:#fff;
-padding:15px;
 text-align:center;
+padding:14px;
+color:white;
 font-weight:bold;
 }
 
-.buy{
-flex:1;
-background:#ffcc00;
-padding:15px;
-text-align:center;
-font-weight:bold;
+.cartbtn{
+background:#ff9f00;
+}
+
+.buybtn{
+background:#fb641b;
 }
 
 </style>
+
 </head>
 
-<body onload="loadProduct()">
+<body>
 
 <!-- HEADER -->
 
 <div class="header">
 
-<div class="left">
+<div class="back" onclick="history.back()">←</div>
 
-<div class="icon" onclick="history.back()">←</div>
-<div>Flipkart Lite</div>
+<div>Product Details</div>
 
-</div>
-
-<div>
-
-<span class="icon">🔍</span>
-<span class="icon">🛒</span>
-
-</div>
+<div class="cart">🛒</div>
 
 </div>
 
 
-<!-- SLIDER -->
+<!-- PRODUCT IMAGE -->
 
-<div class="slider">
+<div class="image">
 
-<img id="mainImg">
+<img id="img">
 
-<div class="float-icons">
-
-<div>♡</div>
-<div>↗</div>
-
-</div>
-
-</div>
-
-<div class="dots">
-<span class="dot"></span>
-<span class="dot"></span>
-<span class="dot"></span>
-<span class="dot"></span>
 </div>
 
 
 <!-- PRODUCT INFO -->
 
-<div class="box">
+<div class="info">
 
-<div class="title" id="title"></div>
+<div class="name" id="name"></div>
 
-<div style="margin-top:6px">
-<img src="https://rukminim2.flixcart.com/www/100/40/promos/23/09/2020/00f4c6fa-9c0e-4b9f-bb79-8a5d4d09b02c.png" width="100">
-</div>
+<div>
 
-<div class="price-row">
+<span class="price">₹<span id="price"></span></span>
 
-<span class="off" id="off"></span>
+<span class="mrp">₹<span id="mrp"></span></span>
 
-<span class="mrp" id="mrp"></span>
-
-<span class="price" id="price"></span>
+<span class="discount" id="discount"></span>
 
 </div>
 
-</div>
-
-
-<!-- OFFER TIMER -->
-
-<div class="offer">
-
-Offer ends in <span id="timer" style="color:#ff6d00">8:59</span>
+<div class="delivery" id="delivery"></div>
 
 </div>
 
 
-<!-- EXTRA IMAGES -->
-
-<div class="extra" id="extra"></div>
-
-
-<!-- BOTTOM BAR -->
+<!-- BUTTONS -->
 
 <div class="bottom">
 
-<div class="cart">Add to Cart</div>
+<div class="btn cartbtn">Add to Cart</div>
 
-<div class="buy" onclick="buyNow()">Buy Now</div>
+<div class="btn buybtn" onclick="buyNow()">Buy Now</div>
 
 </div>
 
 
 
-<script>
+<!-- FIREBASE -->
 
-let product;
+<script type="module">
 
-function loadProduct(){
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBfA-mFODccLz13nLpFQFI5Q2qBNIS2_KI",
+  authDomain: "flipkart-clone-ab903.firebaseapp.com",
+  databaseURL: "https://flipkart-clone-ab903-default-rtdb.firebaseio.com",
+  projectId: "flipkart-clone-ab903",
+  storageBucket: "flipkart-clone-ab903.firebasestorage.app",
+  messagingSenderId: "733319152647",
+  appId: "1:733319152647:web:cb5943fc21d8676bad16a2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+
+/* PRODUCT ID */
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 
-const products = JSON.parse(localStorage.getItem("products")) || [];
 
-product = products.find(p=>p.id==id);
+if(!id){
 
-if(!product) return;
-
-document.getElementById("mainImg").src = product.img;
-
-document.getElementById("title").innerText = product.name;
-
-document.getElementById("price").innerText = "₹"+product.price;
-
-document.getElementById("mrp").innerText = "₹"+product.mrp;
-
-let off = Math.round((product.mrp-product.price)/product.mrp*100);
-
-document.getElementById("off").innerText = off+"% off";
-
-loadExtra();
+alert("Product not found");
+history.back();
 
 }
 
 
-function loadExtra(){
+/* LOAD PRODUCT */
 
-if(!product.extraImages) return;
+const snapshot = await get(ref(db,"products/"+id));
 
-let html="";
+if(!snapshot.exists()){
 
-product.extraImages.forEach(img=>{
-
-html += `<img src="${img}">`;
-
-});
-
-document.getElementById("extra").innerHTML = html;
+alert("Product missing");
+history.back();
 
 }
 
+const p = snapshot.val();
 
-function buyNow(){
 
-localStorage.setItem("selectedProduct", JSON.stringify(product));
+img.src = p.image;
+name.innerText = p.name;
+price.innerText = p.price;
+mrp.innerText = p.mrp;
+delivery.innerText = p.delivery;
+
+
+/* DISCOUNT */
+
+let dis = Math.round((p.mrp - p.price) / p.mrp * 100);
+
+discount.innerText = dis + "% off";
+
+
+/* BUY */
+
+window.buyNow = function(){
+
+localStorage.setItem("product", JSON.stringify(p));
 
 location.href = "address.html";
 
 }
-
-
-/* TIMER */
-
-let time=540;
-
-setInterval(()=>{
-
-let m=Math.floor(time/60);
-let s=time%60;
-
-document.getElementById("timer").innerText = m+":"+(s<10?"0"+s:s);
-
-time--;
-
-if(time<=0) time=540;
-
-},1000);
 
 </script>
 
