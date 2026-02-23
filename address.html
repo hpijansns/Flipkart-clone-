@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Address</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+
+/* HEADER */
+
+.header{
+background:white;
+padding:14px;
+display:flex;
+align-items:center;
+font-size:18px;
+border-bottom:1px solid #ddd;
+}
+
+.back{
+margin-right:10px;
+font-size:20px;
+cursor:pointer;
+}
+
+/* STEPS */
+
+.steps{
+display:flex;
+justify-content:space-around;
+padding:15px 10px;
+background:white;
+border-bottom:1px solid #eee;
+}
+
+.step{
+text-align:center;
+font-size:12px;
+color:#666;
+}
+
+.circle{
+width:26px;
+height:26px;
+border-radius:50%;
+border:2px solid #2874f0;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-bottom:4px;
+}
+
+.active{
+background:#2874f0;
+color:white;
+}
+
+/* FORM */
+
+.container{
+padding:14px;
+}
+
+input, select{
+
+width:100%;
+padding:14px;
+margin-bottom:14px;
+border:1px solid #ccc;
+border-radius:4px;
+font-size:14px;
+background:white;
+}
+
+.row{
+display:flex;
+gap:10px;
+}
+
+/* BUTTON */
+
+.save{
+
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#ff6d00;
+color:white;
+text-align:center;
+padding:16px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="back" onclick="history.back()">←</div>
+
+Add delivery address
+
+</div>
+
+<!-- STEPS -->
+
+<div class="steps">
+
+<div class="step">
+<div class="circle active">1</div>
+<div>Address</div>
+</div>
+
+<div class="step">
+<div class="circle">2</div>
+<div>Order Summary</div>
+</div>
+
+<div class="step">
+<div class="circle">3</div>
+<div>Payment</div>
+</div>
+
+</div>
+
+
+<!-- FORM -->
+
+<div class="container">
+
+<input id="name" placeholder="Full Name (Required)*">
+
+<input id="mobile" placeholder="Mobile number (Required)*">
+
+<input id="pincode" placeholder="Pincode (Required)*">
+
+<div class="row">
+
+<input id="city" placeholder="City (Required)*">
+
+<select id="state">
+
+<option value="" disabled selected>Select State</option>
+
+<option>Andhra Pradesh</option>
+<option>Arunachal Pradesh</option>
+<option>Assam</option>
+<option>Bihar</option>
+<option>Chhattisgarh</option>
+<option>Goa</option>
+<option>Gujarat</option>
+<option>Haryana</option>
+<option>Himachal Pradesh</option>
+<option>Jharkhand</option>
+<option>Karnataka</option>
+<option>Kerala</option>
+<option>Madhya Pradesh</option>
+<option>Maharashtra</option>
+<option>Manipur</option>
+<option>Meghalaya</option>
+<option>Mizoram</option>
+<option>Nagaland</option>
+<option>Odisha</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>Sikkim</option>
+<option>Tamil Nadu</option>
+<option>Telangana</option>
+<option>Tripura</option>
+<option>Uttar Pradesh</option>
+<option>Uttarakhand</option>
+<option>West Bengal</option>
+
+<option>Andaman and Nicobar Islands</option>
+<option>Chandigarh</option>
+<option>Dadra and Nagar Haveli and Daman and Diu</option>
+<option>Delhi</option>
+<option>Ladakh</option>
+<option>Lakshadweep</option>
+<option>Puducherry</option>
+
+</select>
+
+</div>
+
+<input id="house" placeholder="House No., Building Name (Required)*">
+
+<input id="area" placeholder="Road name, Area, Colony (Required)*">
+
+</div>
+
+
+<!-- BUTTON -->
+
+<div class="save" onclick="saveAddress()">
+
+Save Address
+
+</div>
+
+
+<script>
+
+function saveAddress(){
+
+let data = {
+
+name: document.getElementById("name").value,
+mobile: document.getElementById("mobile").value,
+pincode: document.getElementById("pincode").value,
+city: document.getElementById("city").value,
+state: document.getElementById("state").value,
+house: document.getElementById("house").value,
+area: document.getElementById("area").value
+
+};
+
+localStorage.setItem("address", JSON.stringify(data));
+
+location.href = "order_summary.html";
+
+}
+
+</script>
+
+</body>
+</html>
