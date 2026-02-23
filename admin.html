@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Panel</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:20px;
+}
+
+.section{
+background:white;
+padding:15px;
+margin-bottom:20px;
+border-radius:6px;
+}
+
+input{
+width:100%;
+padding:8px;
+margin:5px 0;
+}
+
+button{
+padding:8px 12px;
+margin-top:5px;
+cursor:pointer;
+}
+
+.delete{
+background:red;
+color:white;
+}
+
+.edit{
+background:orange;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Admin Panel</h1>
+
+<!-- CATEGORY IMAGE -->
+
+<div class="section">
+
+<h3>Category Image</h3>
+
+<input id="catImg" placeholder="Image URL">
+
+<button onclick="saveCategory()">Update</button>
+
+</div>
+
+<!-- SLIDER -->
+
+<div class="section">
+
+<h3>Slider Images</h3>
+
+<input id="bannerInput" placeholder="Image URL">
+
+<button onclick="addBanner()">Add Banner</button>
+
+<div id="bannerList"></div>
+
+</div>
+
+<!-- PRODUCTS -->
+
+<div class="section">
+
+<h3>Add / Edit Product</h3>
+
+<input id="pname" placeholder="Product Name">
+<input id="pimg" placeholder="Image URL">
+<input id="pmrp" placeholder="MRP">
+<input id="pprice" placeholder="Selling Price">
+
+<button onclick="saveProduct()">Save Product</button>
+
+<div id="productList"></div>
+
+</div>
+
+<!-- PAYMENT -->
+
+<div class="section">
+
+<h3>Payment Link</h3>
+
+<input id="payLink" placeholder="Payment URL">
+
+<button onclick="savePayment()">Save</button>
+
+</div>
+
+
+<script>
+
+let editIndex = -1;
+
+
+/* CATEGORY IMAGE */
+
+function saveCategory(){
+
+localStorage.setItem("categoryImage", catImg.value);
+
+alert("Updated");
+
+}
+
+
+/* SLIDER */
+
+function addBanner(){
+
+let banners = JSON.parse(localStorage.getItem("banners")) || [];
+
+banners.push(bannerInput.value);
+
+localStorage.setItem("banners", JSON.stringify(banners));
+
+showBanners();
+
+}
+
+function showBanners(){
+
+let banners = JSON.parse(localStorage.getItem("banners")) || [];
+
+let html="";
+
+banners.forEach((b,i)=>{
+
+html+=`
+<div>
+${b}
+<button class="delete" onclick="deleteBanner(${i})">Delete</button>
+</div>
+`;
+
+});
+
+bannerList.innerHTML = html;
+
+}
+
+function deleteBanner(i){
+
+let banners = JSON.parse(localStorage.getItem("banners"));
+
+banners.splice(i,1);
+
+localStorage.setItem("banners", JSON.stringify(banners));
+
+showBanners();
+
+}
+
+
+/* PRODUCTS */
+
+function saveProduct(){
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+let data = {
+
+id: Date.now(),
+name: pname.value,
+img: pimg.value,
+mrp: pmrp.value,
+price: pprice.value
+
+};
+
+if(editIndex === -1){
+
+products.push(data);
+
+}else{
+
+products[editIndex] = data;
+
+editIndex = -1;
+
+}
+
+localStorage.setItem("products", JSON.stringify(products));
+
+showProducts();
+
+}
+
+function showProducts(){
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+let html="";
+
+products.forEach((p,i)=>{
+
+html+=`
+<div>
+
+${p.name}
+
+<button class="edit" onclick="editProduct(${i})">Edit</button>
+
+<button class="delete" onclick="deleteProduct(${i})">Delete</button>
+
+</div>
+`;
+
+});
+
+productList.innerHTML = html;
+
+}
+
+function editProduct(i){
+
+let products = JSON.parse(localStorage.getItem("products"));
+
+let p = products[i];
+
+pname.value = p.name;
+pimg.value = p.img;
+pmrp.value = p.mrp;
+pprice.value = p.price;
+
+editIndex = i;
+
+}
+
+function deleteProduct(i){
+
+let products = JSON.parse(localStorage.getItem("products"));
+
+products.splice(i,1);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+showProducts();
+
+}
+
+
+/* PAYMENT */
+
+function savePayment(){
+
+localStorage.setItem("paymentLink", payLink.value);
+
+alert("Saved");
+
+}
+
+
+/* LOAD */
+
+showProducts();
+showBanners();
+
+</script>
+
+</body>
+</html>
