@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Summary</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f1f3f6;
+}
+
+/* HEADER */
+
+.header{
+background:white;
+padding:14px;
+display:flex;
+align-items:center;
+font-size:18px;
+border-bottom:1px solid #ddd;
+}
+
+.back{
+margin-right:10px;
+font-size:20px;
+cursor:pointer;
+}
+
+/* STEPS */
+
+.steps{
+display:flex;
+justify-content:space-around;
+padding:15px;
+background:white;
+}
+
+.step{
+text-align:center;
+font-size:12px;
+color:#777;
+}
+
+.circle{
+width:26px;
+height:26px;
+border-radius:50%;
+border:2px solid #2874f0;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-bottom:4px;
+}
+
+.active{
+background:#2874f0;
+color:white;
+}
+
+/* CARD */
+
+.card{
+background:white;
+margin:10px;
+padding:12px;
+border-radius:6px;
+}
+
+/* PRODUCT */
+
+.product{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.product img{
+width:70px;
+}
+
+/* PRICE DETAILS */
+
+.row{
+display:flex;
+justify-content:space-between;
+margin:8px 0;
+}
+
+.green{
+color:green;
+font-weight:bold;
+}
+
+/* BOTTOM BAR */
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+padding:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 -2px 5px rgba(0,0,0,0.1);
+}
+
+.btn{
+background:#ffcc00;
+padding:12px 25px;
+font-weight:bold;
+border-radius:4px;
+cursor:pointer;
+}
+
+/* FOOTER */
+
+.secure{
+background:white;
+margin-top:80px;
+padding:15px;
+text-align:center;
+color:#666;
+}
+
+</style>
+</head>
+
+<body onload="loadPage()">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="back" onclick="history.back()">←</div>
+
+Order Summary
+
+</div>
+
+<!-- STEPS -->
+
+<div class="steps">
+
+<div class="step">
+<div class="circle">✔</div>
+<div>Address</div>
+</div>
+
+<div class="step">
+<div class="circle active">2</div>
+<div>Order Summary</div>
+</div>
+
+<div class="step">
+<div class="circle">3</div>
+<div>Payment</div>
+</div>
+
+</div>
+
+<!-- ADDRESS -->
+
+<div class="card">
+
+<b>Delivered to:</b>
+
+<p id="addressBox"></p>
+
+</div>
+
+<!-- PRODUCT -->
+
+<div class="card">
+
+<div class="product">
+
+<img id="pimg">
+
+<div>
+
+<div id="pname"></div>
+
+<img src="https://rukminim2.flixcart.com/www/100/40/promos/23/09/2020/00f4c6fa-9c0e-4b9f-bb79-8a5d4d09b02c.png" width="70">
+
+<div style="margin-top:5px">
+
+Qty: 1 &nbsp;&nbsp; ₹<span id="price"></span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- PRICE DETAILS -->
+
+<div class="card">
+
+<h3>Price Details</h3>
+
+<div class="row">
+
+<div>Price (1 item)</div>
+<div id="mrp"></div>
+
+</div>
+
+<div class="row">
+
+<div>Discount</div>
+<div class="green" id="discount"></div>
+
+</div>
+
+<div class="row">
+
+<div>Delivery Charges</div>
+<div class="green">FREE Delivery</div>
+
+</div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+
+<div class="bottom">
+
+<div>
+
+<div style="text-decoration:line-through;color:#888" id="mrp2"></div>
+
+<div style="font-size:18px;font-weight:bold">₹<span id="price2"></span></div>
+
+</div>
+
+<div class="btn" onclick="goPayment()">
+
+Continue
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="secure">
+
+🛡 Safe and secure payments. Easy returns.  
+<br>
+100% Authentic products.
+
+</div>
+
+
+<script>
+
+function loadPage(){
+
+let address = JSON.parse(localStorage.getItem("address"));
+
+let product = JSON.parse(localStorage.getItem("selectedProduct"));
+
+if(address){
+
+addressBox.innerHTML = `
+<b>${address.name}</b><br>
+${address.house}, ${address.area}<br>
+${address.city}, ${address.state} - ${address.pincode}<br>
+${address.mobile}
+`;
+
+}
+
+if(product){
+
+pimg.src = product.img;
+
+pname.innerText = product.name;
+
+price.innerText = product.price;
+
+price2.innerText = product.price;
+
+mrp.innerText = "₹"+product.mrp;
+
+mrp2.innerText = "₹"+product.mrp;
+
+let off = Math.round((product.mrp-product.price)/product.mrp*100);
+
+discount.innerText = off+"% off";
+
+}
+
+}
+
+
+function goPayment(){
+
+location.href = "payment.html";
+
+}
+
+</script>
+
+</body>
+</html>
