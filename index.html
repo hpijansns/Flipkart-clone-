@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shop</title>
+<title>Online Shop</title>
 
 <style>
 
@@ -15,13 +15,19 @@ font-family:Arial;
 background:#f1f3f6;
 }
 
+/* HEADER */
+
 .header{
 background:#2874f0;
-padding:12px;
-color:white;
+padding:10px;
 display:flex;
 align-items:center;
 gap:10px;
+color:white;
+}
+
+.menu{
+font-size:20px;
 }
 
 .search{
@@ -35,13 +41,36 @@ border:none;
 border-radius:4px;
 }
 
+.cart{
+font-size:20px;
+}
+
+/* CATEGORY */
+
 .category img{
 width:100%;
+display:block;
 }
+
+/* BANNER */
 
 .banner img{
 width:100%;
+display:block;
 }
+
+/* DEAL */
+
+.deal{
+background:white;
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-weight:bold;
+}
+
+/* PRODUCTS */
 
 .products{
 display:grid;
@@ -60,6 +89,11 @@ border-radius:6px;
 width:100%;
 }
 
+.name{
+font-size:14px;
+margin-top:5px;
+}
+
 .price{
 font-weight:bold;
 }
@@ -76,25 +110,50 @@ font-size:12px;
 
 <body>
 
+<!-- HEADER -->
+
 <div class="header">
 
-☰
+<div class="menu">☰</div>
 
 <div class="search">
-<input placeholder="Search for Products">
+<input placeholder="Search for Products, Brands and More">
 </div>
 
-🛒
+<div class="cart">🛒</div>
 
 </div>
+
+
+<!-- CATEGORY IMAGE -->
 
 <div class="category">
 <img id="catImg">
 </div>
 
+
+<!-- BANNERS -->
+
 <div class="banner" id="bannerList"></div>
 
+
+<!-- DEAL SECTION -->
+
+<div class="deal">
+
+<span>Deals of the Day ⌚</span>
+
+<span style="color:red;">SALE IS LIVE</span>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
 <div class="products" id="productGrid"></div>
+
+
+<!-- FIREBASE -->
 
 <script type="module">
 
@@ -115,20 +174,19 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-/* CATEGORY */
+
+/* CATEGORY IMAGE */
 
 onValue(ref(db,"settings/category"),snap=>{
 
-if(snap.exists()){
+if(!snap.exists()) return;
 
 catImg.src = snap.val().image;
-
-}
 
 });
 
 
-/* BANNER */
+/* BANNERS */
 
 onValue(ref(db,"banners"),snap=>{
 
@@ -136,9 +194,9 @@ bannerList.innerHTML="";
 
 snap.forEach(child=>{
 
-let b=child.val();
+let banner = child.val();
 
-bannerList.innerHTML+=`<img src="${b.url}">`;
+bannerList.innerHTML += `<img src="${banner.url}">`;
 
 });
 
@@ -153,10 +211,10 @@ productGrid.innerHTML="";
 
 snap.forEach(child=>{
 
-let p=child.val();
-let id=child.key;
+let p = child.val();
+let id = child.key;
 
-productGrid.innerHTML+=`
+productGrid.innerHTML += `
 
 <a href="product-details.html?id=${id}" style="text-decoration:none;color:black">
 
@@ -164,7 +222,7 @@ productGrid.innerHTML+=`
 
 <img src="${p.image}">
 
-<div>${p.name}</div>
+<div class="name">${p.name}</div>
 
 <div>
 
