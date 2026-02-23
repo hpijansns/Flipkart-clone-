@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Payment</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f1f3f6;
+}
+
+/* HEADER */
+
+.header{
+background:white;
+padding:14px;
+display:flex;
+align-items:center;
+font-size:18px;
+border-bottom:1px solid #ddd;
+}
+
+.back{
+margin-right:10px;
+font-size:20px;
+cursor:pointer;
+}
+
+/* STEPS */
+
+.steps{
+display:flex;
+justify-content:space-around;
+background:white;
+padding:15px;
+border-bottom:1px solid #eee;
+}
+
+.step{
+text-align:center;
+font-size:12px;
+color:#777;
+}
+
+.circle{
+width:26px;
+height:26px;
+border-radius:50%;
+border:2px solid #2874f0;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-bottom:4px;
+}
+
+.active{
+background:#2874f0;
+color:white;
+}
+
+/* CARD */
+
+.card{
+background:white;
+margin:10px;
+padding:15px;
+border-radius:6px;
+}
+
+/* UPI */
+
+.upi{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 0;
+border-bottom:1px solid #eee;
+}
+
+.upi img{
+width:36px;
+}
+
+/* COD MESSAGE */
+
+.codmsg{
+padding:12px;
+background:#fff3cd;
+border:1px solid #ffeeba;
+border-radius:6px;
+color:#856404;
+font-size:14px;
+}
+
+/* BOTTOM */
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 -2px 6px rgba(0,0,0,0.1);
+}
+
+.btn{
+background:#ffcc00;
+padding:12px 30px;
+border-radius:4px;
+font-weight:bold;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body onload="loadAmount()">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="back" onclick="history.back()">←</div>
+
+Payment
+
+</div>
+
+
+<!-- STEPS -->
+
+<div class="steps">
+
+<div class="step">
+<div class="circle">✓</div>
+<div>Address</div>
+</div>
+
+<div class="step">
+<div class="circle">✓</div>
+<div>Order Summary</div>
+</div>
+
+<div class="step">
+<div class="circle active">3</div>
+<div>Payment</div>
+</div>
+
+</div>
+
+
+<!-- UPI -->
+
+<div class="card">
+
+<h3>Pay using UPI</h3>
+
+<label class="upi">
+
+<input type="radio" name="pay" value="phonepe">
+
+<img src="https://cdn-icons-png.flaticon.com/512/5968/5968143.png">
+
+PhonePe
+
+</label>
+
+
+<label class="upi">
+
+<input type="radio" name="pay" value="gpay">
+
+<img src="https://cdn-icons-png.flaticon.com/512/6124/6124998.png">
+
+Google Pay
+
+</label>
+
+
+<label class="upi">
+
+<input type="radio" name="pay" value="paytm">
+
+<img src="https://cdn-icons-png.flaticon.com/512/5968/5968804.png">
+
+Paytm
+
+</label>
+
+</div>
+
+
+<!-- COD DISABLED -->
+
+<div class="card">
+
+<h3>Cash on Delivery</h3>
+
+<div class="codmsg">
+
+Cash on Delivery is currently unavailable for this order.  
+Please choose an online payment method to continue.
+
+</div>
+
+</div>
+
+
+<!-- BOTTOM BAR -->
+
+<div class="bottom">
+
+<div>
+
+Payable  
+<b>₹<span id="amount"></span></b>
+
+</div>
+
+<div class="btn" onclick="payNow()">
+
+Pay
+
+</div>
+
+</div>
+
+
+<script>
+
+let product;
+
+function loadAmount(){
+
+product = JSON.parse(localStorage.getItem("selectedProduct"));
+
+if(product){
+
+document.getElementById("amount").innerText = product.price;
+
+}
+
+}
+
+
+function payNow(){
+
+let method = document.querySelector('input[name="pay"]:checked');
+
+if(!method){
+
+alert("Please select a payment method");
+
+return;
+
+}
+
+let upi = "upi://pay?pa=yourupi@upi&pn=Shop&am="+product.price+"&cu=INR";
+
+window.location.href = upi;
+
+}
+
+</script>
+
+</body>
+</html>
