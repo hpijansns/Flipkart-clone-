@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Payment</title>
+<title>Payments</title>
 
 <style>
 
@@ -64,38 +64,30 @@ background:#2874f0;
 color:white;
 }
 
-/* CARD */
+/* OFFER IMAGE */
 
-.card{
+.offer img{
+width:100%;
+display:block;
+}
+
+/* UPI CARD */
+
+.upiCard{
 background:white;
 margin:10px;
-padding:15px;
-border-radius:6px;
-}
-
-/* UPI */
-
-.upi{
+padding:18px;
+border-radius:10px;
 display:flex;
 align-items:center;
-gap:12px;
-padding:12px 0;
-border-bottom:1px solid #eee;
+gap:15px;
+border:1px solid #ddd;
+font-size:18px;
 }
 
-.upi img{
+.upiCard img{
 width:36px;
-}
-
-/* COD MESSAGE */
-
-.codmsg{
-padding:12px;
-background:#fff3cd;
-border:1px solid #ffeeba;
-border-radius:6px;
-color:#856404;
-font-size:14px;
+height:36px;
 }
 
 /* BOTTOM */
@@ -121,10 +113,22 @@ font-weight:bold;
 cursor:pointer;
 }
 
+.old{
+text-decoration:line-through;
+color:#888;
+font-size:14px;
+}
+
+.price{
+font-size:20px;
+font-weight:bold;
+}
+
 </style>
+
 </head>
 
-<body onload="loadAmount()">
+<body onload="loadPage()">
 
 <!-- HEADER -->
 
@@ -132,7 +136,7 @@ cursor:pointer;
 
 <div class="back" onclick="history.back()">←</div>
 
-Payment
+Payments
 
 </div>
 
@@ -159,59 +163,49 @@ Payment
 </div>
 
 
-<!-- UPI -->
+<!-- OFFER IMAGE -->
 
-<div class="card">
+<div class="offer">
 
-<h3>Pay using UPI</h3>
+<img id="bannerImg" src="https://iili.io/qKnVnRa.webp">
 
-<label class="upi">
+</div>
 
-<input type="radio" name="pay" value="phonepe">
 
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968143.png">
+<!-- UPI OPTIONS -->
+
+<div class="upiCard" onclick="payUPI()">
+
+<img id="phonepeImg">
 
 PhonePe
 
-</label>
+</div>
 
 
-<label class="upi">
+<div class="upiCard" onclick="payUPI()">
 
-<input type="radio" name="pay" value="gpay">
-
-<img src="https://cdn-icons-png.flaticon.com/512/6124/6124998.png">
-
-Google Pay
-
-</label>
-
-
-<label class="upi">
-
-<input type="radio" name="pay" value="paytm">
-
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968804.png">
+<img id="paytmImg">
 
 Paytm
 
-</label>
+</div>
+
+
+<div class="upiCard" onclick="payUPI()">
+
+<img id="gpayImg">
+
+Google Pay
 
 </div>
 
 
-<!-- COD DISABLED -->
+<div class="upiCard" onclick="payUPI()">
 
-<div class="card">
+<img id="scanpayImg">
 
-<h3>Cash on Delivery</h3>
-
-<div class="codmsg">
-
-Cash on Delivery is currently unavailable for this order.  
-Please choose an online payment method to continue.
-
-</div>
+SCAN PAY
 
 </div>
 
@@ -222,14 +216,14 @@ Please choose an online payment method to continue.
 
 <div>
 
-Payable  
-<b>₹<span id="amount"></span></b>
+<div class="old">₹5999</div>
+<div class="price">₹<span id="amount"></span></div>
 
 </div>
 
-<div class="btn" onclick="payNow()">
+<div class="btn" onclick="payUPI()">
 
-Pay
+Order Now
 
 </div>
 
@@ -240,34 +234,43 @@ Pay
 
 let product;
 
-function loadAmount(){
+function loadPage(){
 
 product = JSON.parse(localStorage.getItem("selectedProduct"));
 
 if(product){
 
-document.getElementById("amount").innerText = product.price;
+amount.innerText = product.price;
 
 }
 
+/* Banner from admin */
+
+let banner = localStorage.getItem("paymentBanner");
+
+if(banner){
+bannerImg.src = banner;
+}
+
+/* UPI images */
+
+let data = JSON.parse(localStorage.getItem("upiApps"));
+
+if(!data) return;
+
+phonepeImg.src = data.phonepe;
+paytmImg.src = data.paytm;
+gpayImg.src = data.gpay;
+scanpayImg.src = data.scanpay;
+
 }
 
 
-function payNow(){
-
-let method = document.querySelector('input[name="pay"]:checked');
-
-if(!method){
-
-alert("Please select a payment method");
-
-return;
-
-}
+function payUPI(){
 
 let upi = "upi://pay?pa=yourupi@upi&pn=Shop&am="+product.price+"&cu=INR";
 
-window.location.href = upi;
+location.href = upi;
 
 }
 
