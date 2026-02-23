@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f1f3f6;
+}
+
+/* HEADER */
+
+.header{
+background:#2874f0;
+color:white;
+padding:10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.header .left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.icon{
+font-size:20px;
+cursor:pointer;
+}
+
+/* IMAGE SLIDER */
+
+.slider{
+background:#eee;
+position:relative;
+}
+
+.slider img{
+width:100%;
+}
+
+.float-icons{
+position:absolute;
+right:10px;
+top:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.float-icons div{
+background:white;
+width:40px;
+height:40px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+}
+
+/* DOTS */
+
+.dots{
+text-align:center;
+padding:8px;
+}
+
+.dot{
+height:8px;
+width:8px;
+background:#ccc;
+display:inline-block;
+border-radius:50%;
+margin:3px;
+}
+
+/* PRODUCT BOX */
+
+.box{
+background:white;
+padding:12px;
+margin-top:6px;
+}
+
+.title{
+font-size:15px;
+}
+
+.price-row{
+margin-top:8px;
+}
+
+.off{
+color:green;
+font-weight:bold;
+}
+
+.mrp{
+text-decoration:line-through;
+color:gray;
+margin:0 5px;
+}
+
+.price{
+font-weight:bold;
+font-size:18px;
+}
+
+/* OFFER */
+
+.offer{
+background:white;
+margin-top:6px;
+padding:12px;
+font-size:16px;
+}
+
+/* EXTRA IMAGES */
+
+.extra img{
+width:100%;
+margin-top:6px;
+}
+
+/* BOTTOM BAR */
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+display:flex;
+}
+
+.cart{
+flex:1;
+background:#fff;
+padding:15px;
+text-align:center;
+font-weight:bold;
+}
+
+.buy{
+flex:1;
+background:#ffcc00;
+padding:15px;
+text-align:center;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body onload="loadProduct()">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="left">
+
+<div class="icon" onclick="history.back()">←</div>
+<div>Flipkart Lite</div>
+
+</div>
+
+<div>
+
+<span class="icon">🔍</span>
+<span class="icon">🛒</span>
+
+</div>
+
+</div>
+
+
+<!-- SLIDER -->
+
+<div class="slider">
+
+<img id="mainImg">
+
+<div class="float-icons">
+
+<div>♡</div>
+<div>↗</div>
+
+</div>
+
+</div>
+
+<div class="dots">
+<span class="dot"></span>
+<span class="dot"></span>
+<span class="dot"></span>
+<span class="dot"></span>
+</div>
+
+
+<!-- PRODUCT INFO -->
+
+<div class="box">
+
+<div class="title" id="title"></div>
+
+<div style="margin-top:6px">
+<img src="https://rukminim2.flixcart.com/www/100/40/promos/23/09/2020/00f4c6fa-9c0e-4b9f-bb79-8a5d4d09b02c.png" width="100">
+</div>
+
+<div class="price-row">
+
+<span class="off" id="off"></span>
+
+<span class="mrp" id="mrp"></span>
+
+<span class="price" id="price"></span>
+
+</div>
+
+</div>
+
+
+<!-- OFFER TIMER -->
+
+<div class="offer">
+
+Offer ends in <span id="timer" style="color:#ff6d00">8:59</span>
+
+</div>
+
+
+<!-- EXTRA IMAGES -->
+
+<div class="extra" id="extra"></div>
+
+
+<!-- BOTTOM BAR -->
+
+<div class="bottom">
+
+<div class="cart">Add to Cart</div>
+
+<div class="buy" onclick="buyNow()">Buy Now</div>
+
+</div>
+
+
+
+<script>
+
+let product;
+
+function loadProduct(){
+
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+
+const products = JSON.parse(localStorage.getItem("products")) || [];
+
+product = products.find(p=>p.id==id);
+
+if(!product) return;
+
+document.getElementById("mainImg").src = product.img;
+
+document.getElementById("title").innerText = product.name;
+
+document.getElementById("price").innerText = "₹"+product.price;
+
+document.getElementById("mrp").innerText = "₹"+product.mrp;
+
+let off = Math.round((product.mrp-product.price)/product.mrp*100);
+
+document.getElementById("off").innerText = off+"% off";
+
+loadExtra();
+
+}
+
+
+function loadExtra(){
+
+if(!product.extraImages) return;
+
+let html="";
+
+product.extraImages.forEach(img=>{
+
+html += `<img src="${img}">`;
+
+});
+
+document.getElementById("extra").innerHTML = html;
+
+}
+
+
+function buyNow(){
+
+localStorage.setItem("selectedProduct", JSON.stringify(product));
+
+location.href = "address.html";
+
+}
+
+
+/* TIMER */
+
+let time=540;
+
+setInterval(()=>{
+
+let m=Math.floor(time/60);
+let s=time%60;
+
+document.getElementById("timer").innerText = m+":"+(s<10?"0"+s:s);
+
+time--;
+
+if(time<=0) time=540;
+
+},1000);
+
+</script>
+
+</body>
+</html>
