@@ -15,8 +15,6 @@ font-family:Arial;
 background:#f1f3f6;
 }
 
-/* HEADER */
-
 .header{
 background:#2874f0;
 padding:12px;
@@ -37,35 +35,13 @@ border:none;
 border-radius:4px;
 }
 
-/* CATEGORY */
-
 .category img{
 width:100%;
 }
 
-/* BANNER */
-
 .banner img{
 width:100%;
 }
-
-/* DEAL */
-
-.deal{
-background:white;
-padding:10px;
-margin-top:10px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.sale{
-color:red;
-font-weight:bold;
-}
-
-/* PRODUCTS */
 
 .products{
 display:grid;
@@ -100,53 +76,25 @@ font-size:12px;
 
 <body>
 
-<!-- HEADER -->
-
 <div class="header">
 
 ☰
 
 <div class="search">
-<input placeholder="Search for Products, Brands and More">
+<input placeholder="Search for Products">
 </div>
 
 🛒
 
 </div>
 
-
-<!-- CATEGORY -->
-
 <div class="category">
-
 <img id="catImg">
-
 </div>
-
-
-<!-- BANNER -->
 
 <div class="banner" id="bannerList"></div>
 
-
-<!-- DEAL -->
-
-<div class="deal">
-
-<div>Deals of the Day ⌚</div>
-
-<div class="sale">SALE IS LIVE</div>
-
-</div>
-
-
-<!-- PRODUCTS -->
-
 <div class="products" id="productGrid"></div>
-
-
-
-<!-- FIREBASE -->
 
 <script type="module">
 
@@ -167,24 +115,26 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-/* CATEGORY IMAGE */
+/* CATEGORY */
 
-onValue(ref(db,"settings/category"),(snap)=>{
+onValue(ref(db,"settings/category"),snap=>{
 
-if(!snap.exists()) return;
+if(snap.exists()){
 
 catImg.src = snap.val().image;
+
+}
 
 });
 
 
-/* BANNERS */
+/* BANNER */
 
-onValue(ref(db,"banners"),(snap)=>{
+onValue(ref(db,"banners"),snap=>{
 
 bannerList.innerHTML="";
 
-snap.forEach((child)=>{
+snap.forEach(child=>{
 
 let b=child.val();
 
@@ -197,15 +147,18 @@ bannerList.innerHTML+=`<img src="${b.url}">`;
 
 /* PRODUCTS */
 
-onValue(ref(db,"products"),(snap)=>{
+onValue(ref(db,"products"),snap=>{
 
 productGrid.innerHTML="";
 
-snap.forEach((child)=>{
+snap.forEach(child=>{
 
 let p=child.val();
+let id=child.key;
 
 productGrid.innerHTML+=`
+
+<a href="product-details.html?id=${id}" style="text-decoration:none;color:black">
 
 <div class="card">
 
@@ -221,6 +174,8 @@ productGrid.innerHTML+=`
 </div>
 
 </div>
+
+</a>
 
 `;
 
