@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Admin Panel</title>
 
 <style>
@@ -9,305 +12,222 @@
 body{
 font-family:Arial;
 background:#f2f2f2;
+margin:0;
 padding:20px;
+}
+
+h1{
+text-align:center;
 }
 
 .section{
 background:white;
 padding:15px;
 margin-bottom:20px;
-border-radius:6px;
+border-radius:8px;
 }
 
 input{
 width:100%;
-padding:8px;
-margin:5px 0;
+padding:10px;
+margin:6px 0;
 }
 
 button{
-padding:8px 12px;
-margin-top:5px;
+padding:10px;
+background:#2874f0;
+color:white;
+border:none;
 cursor:pointer;
+margin-top:5px;
+}
+
+.product{
+border:1px solid #ddd;
+padding:10px;
+margin-top:10px;
+border-radius:6px;
 }
 
 .delete{
 background:red;
-color:white;
-}
-
-.edit{
-background:orange;
-color:white;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<h1>Admin Panel</h1>
+<h1>Website Admin</h1>
 
-<!-- CATEGORY IMAGE -->
-
-<div class="section">
-
-<h3>Category Image</h3>
-
-<input id="catImg" placeholder="Image URL">
-
-<button onclick="saveCategory()">Update</button>
-
-</div>
-
-
-<!-- SLIDER -->
+<!-- PRODUCT ADD -->
 
 <div class="section">
 
-<h3>Slider Images</h3>
-
-<input id="bannerInput" placeholder="Image URL">
-
-<button onclick="addBanner()">Add Banner</button>
-
-<div id="bannerList"></div>
-
-</div>
-
-
-<!-- PRODUCTS -->
-
-<div class="section">
-
-<h3>Add / Edit Product</h3>
+<h2>Add Product</h2>
 
 <input id="pname" placeholder="Product Name">
 
-<input id="pimg" placeholder="Main Image URL">
+<input id="pimg" placeholder="Product Image URL">
 
-<input id="pmrp" placeholder="MRP">
+<input id="pmrp" placeholder="MRP Price">
 
-<input id="pprice" placeholder="Selling Price">
+<input id="psale" placeholder="Selling Price">
 
-<input id="extra1" placeholder="Extra Image 1">
+<input id="pdiscount" placeholder="Discount %">
 
-<input id="extra2" placeholder="Extra Image 2">
+<input id="pdelivery" placeholder="Delivery Text">
 
-<input id="extra3" placeholder="Extra Image 3">
+<button onclick="addProduct()">Add Product</button>
 
-<input id="extra4" placeholder="Extra Image 4">
+</div>
 
-<button onclick="saveProduct()">Save Product</button>
+
+<!-- PRODUCTS LIST -->
+
+<div class="section">
+
+<h2>Products</h2>
 
 <div id="productList"></div>
 
 </div>
 
 
-<!-- PAYMENT -->
+<!-- BANNER -->
 
 <div class="section">
 
-<h3>Payment Link</h3>
+<h2>Home Slider Banner</h2>
 
-<input id="payLink" placeholder="Payment URL">
+<input id="bannerUrl" placeholder="Banner Image URL">
 
-<button onclick="savePayment()">Save</button>
+<button onclick="saveBanner()">Save Banner</button>
+
+</div>
+
+
+<!-- CATEGORY IMAGE -->
+
+<div class="section">
+
+<h2>Categories Image</h2>
+
+<input id="catImg" placeholder="Categories Image URL">
+
+<button onclick="saveCategory()">Save</button>
+
+</div>
+
+
+<!-- PAYMENT SETTINGS -->
+
+<div class="section">
+
+<h2>Payment Settings</h2>
+
+<input id="paymentBanner" placeholder="Payment Offer Banner URL">
+
+<input id="phonepe" placeholder="PhonePe Image URL">
+
+<input id="paytm" placeholder="Paytm Image URL">
+
+<input id="gpay" placeholder="Google Pay Image URL">
+
+<input id="scanpay" placeholder="Scan Pay Image URL">
+
+<input id="upiid" placeholder="UPI ID">
+
+<button onclick="savePayment()">Save Payment Settings</button>
 
 </div>
 
 
 <script>
 
-let editIndex = -1;
+/* PRODUCTS */
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+function addProduct(){
+
+let p = {
+
+id: Date.now(),
+name: pname.value,
+img: pimg.value,
+mrp: pmrp.value,
+price: psale.value,
+discount: pdiscount.value,
+delivery: pdelivery.value
+
+};
+
+products.push(p);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+loadProducts();
+
+}
+
+function loadProducts(){
+
+productList.innerHTML="";
+
+products.forEach(p=>{
+
+productList.innerHTML+=`
+
+<div class="product">
+
+${p.name}<br>
+₹${p.price}
+
+<button onclick="deleteProduct(${p.id})" class="delete">Delete</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function deleteProduct(id){
+
+products = products.filter(p=>p.id!=id);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+loadProducts();
+
+}
+
+loadProducts();
 
 
-/* CATEGORY IMAGE */
+
+/* BANNER */
+
+function saveBanner(){
+
+localStorage.setItem("homeBanner", bannerUrl.value);
+
+alert("Banner Updated");
+
+}
+
+
+
+/* CATEGORY */
 
 function saveCategory(){
 
 localStorage.setItem("categoryImage", catImg.value);
 
-alert("Updated");
-
-}
-
-
-/* SLIDER */
-
-function addBanner(){
-
-let banners = JSON.parse(localStorage.getItem("banners")) || [];
-
-banners.push(bannerInput.value);
-
-localStorage.setItem("banners", JSON.stringify(banners));
-
-showBanners();
-
-}
-
-function showBanners(){
-
-let banners = JSON.parse(localStorage.getItem("banners")) || [];
-
-let html="";
-
-banners.forEach((b,i)=>{
-
-html+=`
-<div>
-${b}
-<button class="delete" onclick="deleteBanner(${i})">Delete</button>
-</div>
-`;
-
-});
-
-bannerList.innerHTML = html;
-
-}
-
-function deleteBanner(i){
-
-let banners = JSON.parse(localStorage.getItem("banners"));
-
-banners.splice(i,1);
-
-localStorage.setItem("banners", JSON.stringify(banners));
-
-showBanners();
-
-}
-
-
-
-/* PRODUCTS */
-
-function saveProduct(){
-
-let products = JSON.parse(localStorage.getItem("products")) || [];
-
-let data = {
-
-id: Date.now(),
-
-name: pname.value,
-
-img: pimg.value,
-
-mrp: pmrp.value,
-
-price: pprice.value,
-
-extraImages:[
-extra1.value,
-extra2.value,
-extra3.value,
-extra4.value
-]
-
-};
-
-if(editIndex === -1){
-
-products.push(data);
-
-}else{
-
-products[editIndex] = data;
-
-editIndex = -1;
-
-}
-
-localStorage.setItem("products", JSON.stringify(products));
-
-showProducts();
-
-clearFields();
-
-}
-
-
-function showProducts(){
-
-let products = JSON.parse(localStorage.getItem("products")) || [];
-
-let html="";
-
-products.forEach((p,i)=>{
-
-html+=`
-<div>
-
-${p.name}
-
-<button class="edit" onclick="editProduct(${i})">Edit</button>
-
-<button class="delete" onclick="deleteProduct(${i})">Delete</button>
-
-</div>
-`;
-
-});
-
-productList.innerHTML = html;
-
-}
-
-
-function editProduct(i){
-
-let products = JSON.parse(localStorage.getItem("products"));
-
-let p = products[i];
-
-pname.value = p.name;
-
-pimg.value = p.img;
-
-pmrp.value = p.mrp;
-
-pprice.value = p.price;
-
-extra1.value = p.extraImages[0] || "";
-
-extra2.value = p.extraImages[1] || "";
-
-extra3.value = p.extraImages[2] || "";
-
-extra4.value = p.extraImages[3] || "";
-
-editIndex = i;
-
-}
-
-
-function deleteProduct(i){
-
-let products = JSON.parse(localStorage.getItem("products"));
-
-products.splice(i,1);
-
-localStorage.setItem("products", JSON.stringify(products));
-
-showProducts();
-
-}
-
-
-function clearFields(){
-
-pname.value="";
-pimg.value="";
-pmrp.value="";
-pprice.value="";
-extra1.value="";
-extra2.value="";
-extra3.value="";
-extra4.value="";
+alert("Category Image Updated");
 
 }
 
@@ -317,18 +237,24 @@ extra4.value="";
 
 function savePayment(){
 
-localStorage.setItem("paymentLink", payLink.value);
+localStorage.setItem("paymentBanner", paymentBanner.value);
 
-alert("Saved");
+localStorage.setItem("upiID", upiid.value);
+
+let apps = {
+
+phonepe: phonepe.value,
+paytm: paytm.value,
+gpay: gpay.value,
+scanpay: scanpay.value
+
+};
+
+localStorage.setItem("upiApps", JSON.stringify(apps));
+
+alert("Payment Settings Saved");
 
 }
-
-
-/* LOAD */
-
-showProducts();
-
-showBanners();
 
 </script>
 
