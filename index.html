@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shop</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f1f3f6;
+}
+
+/* HEADER */
+
+.header{
+background:#2874f0;
+padding:10px;
+color:white;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:20px;
+font-weight:bold;
+}
+
+.cart{
+font-size:22px;
+}
+
+.search{
+margin-top:8px;
+}
+
+.search input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:4px;
+}
+
+/* CATEGORY IMAGE */
+
+.category img{
+width:100%;
+display:block;
+}
+
+/* SLIDER */
+
+.slider img{
+width:100%;
+display:block;
+}
+
+/* DEALS */
+
+.deals-wrap{
+background:#e9edf1;
+padding:10px;
+}
+
+.deals{
+background:white;
+padding:10px;
+border-radius:6px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.sale{
+color:red;
+font-weight:bold;
+}
+
+/* PRODUCTS */
+
+.products{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+padding:8px;
+}
+
+.card{
+background:white;
+padding:10px;
+border-radius:6px;
+}
+
+.card img{
+width:100%;
+}
+
+.name{
+font-size:13px;
+}
+
+.price{
+color:green;
+font-weight:bold;
+}
+
+.mrp{
+text-decoration:line-through;
+color:gray;
+font-size:12px;
+}
+
+</style>
+</head>
+
+<body onload="loadPage()">
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="top">
+
+<div class="logo">Flipkart</div>
+
+<div class="cart">🛒</div>
+
+</div>
+
+<div class="search">
+
+<input placeholder="Search for Products, Brands and More">
+
+</div>
+
+</div>
+
+
+<!-- CATEGORY IMAGE -->
+
+<div class="category">
+
+<img id="categoryImg">
+
+</div>
+
+
+<!-- SLIDER -->
+
+<div class="slider">
+
+<img id="slideImg">
+
+</div>
+
+
+<!-- DEALS -->
+
+<div class="deals-wrap">
+
+<div class="deals">
+
+<div>
+
+<b>Deals of the Day</b>  
+⌚ <span id="timer">10:00</span>
+
+</div>
+
+<div class="sale">
+
+SALE IS LIVE
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
+<div class="products" id="products"></div>
+
+
+
+<script>
+
+
+function loadPage(){
+
+loadCategory();
+loadSlider();
+loadProducts();
+
+}
+
+
+/* CATEGORY IMAGE */
+
+function loadCategory(){
+
+let img = localStorage.getItem("categoryImage");
+
+if(img){
+
+document.getElementById("categoryImg").src = img;
+
+}
+
+}
+
+
+/* SLIDER */
+
+let slideIndex = 0;
+
+function loadSlider(){
+
+let banners = JSON.parse(localStorage.getItem("banners")) || [];
+
+if(banners.length === 0) return;
+
+setInterval(()=>{
+
+document.getElementById("slideImg").src = banners[slideIndex];
+
+slideIndex++;
+
+if(slideIndex >= banners.length){
+
+slideIndex = 0;
+
+}
+
+},2000);
+
+}
+
+
+/* PRODUCTS */
+
+function loadProducts(){
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+let html = "";
+
+products.forEach(p=>{
+
+html += `
+
+<a href="product-details.html?id=${p.id}">
+
+<div class="card">
+
+<img src="${p.img}">
+
+<div class="name">${p.name}</div>
+
+<div class="price">₹${p.price}</div>
+
+<div class="mrp">₹${p.mrp}</div>
+
+</div>
+
+</a>
+
+`;
+
+});
+
+document.getElementById("products").innerHTML = html;
+
+}
+
+
+/* TIMER */
+
+let time = 600;
+
+setInterval(()=>{
+
+let m = Math.floor(time/60);
+
+let s = time%60;
+
+document.getElementById("timer").innerText = m + ":" + (s<10?"0"+s:s);
+
+time--;
+
+if(time <= 0) time = 600;
+
+},1000);
+
+
+</script>
+
+</body>
+</html>
