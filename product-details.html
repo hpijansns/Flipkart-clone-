@@ -1,242 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Product Details</title>
+<title>Add Address</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:#f1f3f6;
+background:#f5f5f5;
 }
 
 /* HEADER */
 
 .header{
-background:#2874f0;
-color:white;
-padding:12px;
+background:white;
+padding:14px;
 display:flex;
 align-items:center;
-justify-content:space-between;
+font-size:18px;
+border-bottom:1px solid #ddd;
 }
 
 .back{
+margin-right:10px;
 font-size:20px;
 cursor:pointer;
 }
 
-.cart{
-font-size:20px;
-}
+/* STEPS */
 
-/* IMAGE */
-
-.image{
+.steps{
+display:flex;
+justify-content:space-around;
+padding:15px 10px;
 background:white;
+border-bottom:1px solid #eee;
 }
 
-.image img{
+.step{
+text-align:center;
+font-size:12px;
+color:#666;
+}
+
+.circle{
+width:26px;
+height:26px;
+border-radius:50%;
+border:2px solid #2874f0;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin-bottom:4px;
+}
+
+.active{
+background:#2874f0;
+color:white;
+}
+
+/* FORM */
+
+.container{
+padding:14px;
+}
+
+input, select{
+
 width:100%;
-}
-
-/* INFO */
-
-.info{
+padding:14px;
+margin-bottom:14px;
+border:1px solid #ccc;
+border-radius:4px;
+font-size:14px;
 background:white;
-margin-top:10px;
-padding:15px;
 }
 
-.name{
-font-size:18px;
-margin-bottom:8px;
+.row{
+display:flex;
+gap:10px;
 }
 
-.price{
-font-size:22px;
-font-weight:bold;
-}
+/* BUTTON */
 
-.mrp{
-text-decoration:line-through;
-color:gray;
-margin-left:6px;
-}
+.save{
 
-.discount{
-color:green;
-margin-left:6px;
-font-weight:bold;
-}
-
-.delivery{
-margin-top:10px;
-color:#555;
-}
-
-/* BUTTONS */
-
-.bottom{
 position:fixed;
 bottom:0;
 left:0;
 right:0;
-display:flex;
-}
-
-.btn{
-flex:1;
-text-align:center;
-padding:14px;
+background:#ff6d00;
 color:white;
+text-align:center;
+padding:16px;
+font-size:18px;
 font-weight:bold;
-}
+cursor:pointer;
 
-.cartbtn{
-background:#ff9f00;
-}
-
-.buybtn{
-background:#fb641b;
 }
 
 </style>
-
 </head>
 
 <body>
-
-<!-- HEADER -->
 
 <div class="header">
 
 <div class="back" onclick="history.back()">←</div>
 
-<div>Product Details</div>
-
-<div class="cart">🛒</div>
+Add delivery address
 
 </div>
 
+<div class="steps">
 
-<!-- PRODUCT IMAGE -->
+<div class="step">
+<div class="circle active">1</div>
+<div>Address</div>
+</div>
 
-<div class="image">
+<div class="step">
+<div class="circle">2</div>
+<div>Order Summary</div>
+</div>
 
-<img id="img">
+<div class="step">
+<div class="circle">3</div>
+<div>Payment</div>
+</div>
 
 </div>
 
+<div class="container">
 
-<!-- PRODUCT INFO -->
+<input id="name" placeholder="Full Name (Required)*">
 
-<div class="info">
+<input id="mobile" placeholder="Mobile number (Required)*">
 
-<div class="name" id="name"></div>
+<input id="pincode" placeholder="Pincode (Required)*">
 
-<div>
+<div class="row">
 
-<span class="price">₹<span id="price"></span></span>
+<input id="city" placeholder="City (Required)*">
 
-<span class="mrp">₹<span id="mrp"></span></span>
+<select id="state">
 
-<span class="discount" id="discount"></span>
+<option value="" disabled selected>Select State</option>
+
+<option>Andhra Pradesh</option>
+<option>Arunachal Pradesh</option>
+<option>Assam</option>
+<option>Bihar</option>
+<option>Chhattisgarh</option>
+<option>Goa</option>
+<option>Gujarat</option>
+<option>Haryana</option>
+<option>Himachal Pradesh</option>
+<option>Jharkhand</option>
+<option>Karnataka</option>
+<option>Kerala</option>
+<option>Madhya Pradesh</option>
+<option>Maharashtra</option>
+<option>Manipur</option>
+<option>Meghalaya</option>
+<option>Mizoram</option>
+<option>Nagaland</option>
+<option>Odisha</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>Sikkim</option>
+<option>Tamil Nadu</option>
+<option>Telangana</option>
+<option>Tripura</option>
+<option>Uttar Pradesh</option>
+<option>Uttarakhand</option>
+<option>West Bengal</option>
+
+<option>Andaman and Nicobar Islands</option>
+<option>Chandigarh</option>
+<option>Dadra and Nagar Haveli and Daman and Diu</option>
+<option>Delhi</option>
+<option>Ladakh</option>
+<option>Lakshadweep</option>
+<option>Puducherry</option>
+
+</select>
 
 </div>
 
-<div class="delivery" id="delivery"></div>
+<input id="house" placeholder="House No., Building Name (Required)*">
+
+<input id="area" placeholder="Road name, Area, Colony (Required)*">
 
 </div>
 
-
-<!-- BUTTONS -->
-
-<div class="bottom">
-
-<div class="btn cartbtn">Add to Cart</div>
-
-<div class="btn buybtn" onclick="buyNow()">Buy Now</div>
-
+<div class="save" onclick="saveAddress()">
+Save Address
 </div>
 
 
+<script>
 
-<!-- FIREBASE -->
+/* CHECK PRODUCT */
 
-<script type="module">
+let product = JSON.parse(localStorage.getItem("product"));
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+if(!product){
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBfA-mFODccLz13nLpFQFI5Q2qBNIS2_KI",
-  authDomain: "flipkart-clone-ab903.firebaseapp.com",
-  databaseURL: "https://flipkart-clone-ab903-default-rtdb.firebaseio.com",
-  projectId: "flipkart-clone-ab903",
-  storageBucket: "flipkart-clone-ab903.firebasestorage.app",
-  messagingSenderId: "733319152647",
-  appId: "1:733319152647:web:cb5943fc21d8676bad16a2"
+alert("Please select product first");
+location.href="index.html";
+
+}
+
+
+/* AUTO FILL */
+
+let saved = JSON.parse(localStorage.getItem("address"));
+
+if(saved){
+
+name.value = saved.name;
+mobile.value = saved.mobile;
+pincode.value = saved.pincode;
+city.value = saved.city;
+state.value = saved.state;
+house.value = saved.house;
+area.value = saved.area;
+
+}
+
+
+/* SAVE */
+
+function saveAddress(){
+
+if(
+!name.value ||
+!mobile.value ||
+!pincode.value ||
+!city.value ||
+!state.value ||
+!house.value ||
+!area.value
+){
+
+alert("Please fill all fields");
+return;
+
+}
+
+if(mobile.value.length != 10){
+
+alert("Enter valid mobile number");
+return;
+
+}
+
+if(pincode.value.length != 6){
+
+alert("Enter valid pincode");
+return;
+
+}
+
+let data = {
+
+name: name.value,
+mobile: mobile.value,
+pincode: pincode.value,
+city: city.value,
+state: state.value,
+house: house.value,
+area: area.value
+
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+localStorage.setItem("address", JSON.stringify(data));
 
-
-/* PRODUCT ID */
-
-const params = new URLSearchParams(location.search);
-const id = params.get("id");
-
-
-if(!id){
-
-alert("Product not found");
-history.back();
-
-}
-
-
-/* LOAD PRODUCT */
-
-const snapshot = await get(ref(db,"products/"+id));
-
-if(!snapshot.exists()){
-
-alert("Product missing");
-history.back();
-
-}
-
-const p = snapshot.val();
-
-
-img.src = p.image;
-name.innerText = p.name;
-price.innerText = p.price;
-mrp.innerText = p.mrp;
-delivery.innerText = p.delivery;
-
-
-/* DISCOUNT */
-
-let dis = Math.round((p.mrp - p.price) / p.mrp * 100);
-
-discount.innerText = dis + "% off";
-
-
-/* BUY */
-
-window.buyNow = function(){
-
-localStorage.setItem("product", JSON.stringify(p));
-
-location.href = "address.html";
+location.href = "order_summary.html";
 
 }
 
